@@ -7,7 +7,10 @@ import {
   Settings, 
   UserRound, 
   Users, 
-  Stethoscope
+  Stethoscope,
+  Activity,
+  Brain,
+  Siren
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -22,6 +25,9 @@ const sidebarLinks = [
   { name: "Patients", path: "/patients", icon: <UserRound className="h-5 w-5" /> },
   { name: "Doctors", path: "/doctors", icon: <Stethoscope className="h-5 w-5" /> },
   { name: "Appointments", path: "/appointments", icon: <CalendarDays className="h-5 w-5" /> },
+  { name: "Monitoring", path: "/monitoring", icon: <Activity className="h-5 w-5" /> },
+  { name: "Health Risk AI", path: "/health-risk", icon: <Brain className="h-5 w-5" /> },
+  { name: "Alerts", path: "/alerts", icon: <Siren className="h-5 w-5" /> },
   { name: "Medical Records", path: "/records", icon: <FileText className="h-5 w-5" /> },
   { name: "Billing", path: "/billing", icon: <Receipt className="h-5 w-5" /> },
   { name: "Staff", path: "/staff", icon: <Users className="h-5 w-5" /> },

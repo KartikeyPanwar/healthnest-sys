@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { v4 as uuidv4 } from 'uuid';
+import { mockPatients } from "@/data/mockData";
 
 import {
   Card,
@@ -83,6 +84,35 @@ const NewPatient = () => {
     
     // Simulate API call
     setTimeout(() => {
+      mockPatients.unshift({
+        id: uuidv4().slice(0, 8).toUpperCase(),
+        name: values.name,
+        gender: values.gender,
+        dob: values.dob,
+        bloodType: values.bloodType || "Unknown",
+        address: values.address,
+        phone: values.phone,
+        email: values.email,
+        emergencyContact: {
+          name: values.emergencyName,
+          relationship: values.emergencyRelationship,
+          phone: values.emergencyPhone,
+        },
+        medicalHistory: {
+          allergies: values.allergies ? values.allergies.split(",").map(s => s.trim()) : [],
+          conditions: values.conditions ? values.conditions.split(",").map(s => s.trim()) : [],
+          medications: [],
+          surgeries: [],
+        },
+        insuranceDetails: values.provider ? {
+          provider: values.provider,
+          policyNumber: values.policyNumber || "",
+          expiryDate: values.expiryDate || "",
+        } : undefined,
+        status: "active",
+        registeredDate: new Date().toISOString().split("T")[0],
+      });
+
       toast.success("Patient registered successfully", {
         description: `Patient ${values.name} has been added to the system`,
       });
