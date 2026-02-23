@@ -21,6 +21,9 @@ import ProfilePage from "./pages/Profile";
 import LoginPage from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import DoctorDetail from "./pages/Doctors/DoctorDetail";
+import MonitoringPage from "./pages/Monitoring";
+import HealthRiskPage from "./pages/HealthRisk";
+import AlertsPage from "./pages/Alerts";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +45,9 @@ const App = () => (
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/doctors/new" element={<NewDoctor />} />
             <Route path="/doctors/:id" element={<DoctorDetail />} />
+            <Route path="/monitoring" element={<MonitoringPage />} />
+            <Route path="/health-risk" element={<HealthRiskPage />} />
+            <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/records" element={<MedicalRecordsPage />} />
             <Route path="/records/prescription/new" element={<NewPrescription />} />
             <Route path="/billing" element={<BillingPage />} />
