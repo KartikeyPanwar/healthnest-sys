@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mockPatients, mockDoctors, mockPrescriptions } from "@/data/mockData";
 
 import {
   Card,
@@ -80,15 +81,33 @@ const NewPrescription = () => {
 
   const onSubmit = (values: PrescriptionFormValues) => {
     setIsSubmitting(true);
-    console.log("Prescription values:", values);
-    
-    // Simulate API call
+    const patient = mockPatients.find(p => p.id === values.patientId);
+    const doctor = mockDoctors.find(d => d.id === values.doctorId);
+
     setTimeout(() => {
+      mockPrescriptions.push({
+        id: `PR${String(mockPrescriptions.length + 1).padStart(3, "0")}`,
+        patientId: values.patientId,
+        patientName: patient?.name || "Unknown",
+        doctorId: values.doctorId,
+        doctorName: doctor?.name || "Unknown",
+        date: values.date,
+        diagnosis: values.diagnosis,
+        medications: values.medications.map(m => ({
+          name: m.name,
+          dosage: m.dosage,
+          frequency: m.frequency,
+          duration: m.duration,
+          instructions: m.instructions,
+        })),
+        instructions: values.instructions,
+        followUp: values.followUpDate ? { date: values.followUpDate, notes: values.followUpNotes || "" } : undefined,
+        createdAt: new Date().toISOString(),
+      });
       toast.success("Prescription created successfully");
-      
       setIsSubmitting(false);
       navigate("/records");
-    }, 1000);
+    }, 500);
   };
 
   return (
@@ -127,10 +146,9 @@ const NewPrescription = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="P001">John Doe</SelectItem>
-                          <SelectItem value="P002">Jane Smith</SelectItem>
-                          <SelectItem value="P003">Robert Johnson</SelectItem>
-                          <SelectItem value="P004">Emily Brown</SelectItem>
+                          {mockPatients.map(p => (
+                            <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -154,9 +172,9 @@ const NewPrescription = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="D001">Dr. Michael Clark</SelectItem>
-                          <SelectItem value="D002">Dr. Sarah Wilson</SelectItem>
-                          <SelectItem value="D003">Dr. James Taylor</SelectItem>
+                          {mockDoctors.map(d => (
+                            <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
