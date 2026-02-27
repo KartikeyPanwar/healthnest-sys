@@ -24,6 +24,7 @@ const sidebarLinks = [
   { name: "Dashboard", path: "/", icon: <LayoutDashboard className="h-5 w-5" /> },
   { name: "Patients", path: "/patients", icon: <UserRound className="h-5 w-5" /> },
   { name: "Doctors", path: "/doctors", icon: <Stethoscope className="h-5 w-5" /> },
+  { name: "Doctor Dashboard", path: "/doctor-dashboard", icon: <Activity className="h-5 w-5" /> },
   { name: "Appointments", path: "/appointments", icon: <CalendarDays className="h-5 w-5" /> },
   { name: "Monitoring", path: "/monitoring", icon: <Activity className="h-5 w-5" /> },
   { name: "Health Risk AI", path: "/health-risk", icon: <Brain className="h-5 w-5" /> },
