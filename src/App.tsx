@@ -21,6 +21,7 @@ import ProfilePage from "./pages/Profile";
 import LoginPage from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import DoctorDetail from "./pages/Doctors/DoctorDetail";
+import DoctorDashboard from "./pages/Doctors/DoctorDashboard";
 import MonitoringPage from "./pages/Monitoring";
 import HealthRiskPage from "./pages/HealthRisk";
 import AlertsPage from "./pages/Alerts";
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/doctors/new" element={<NewDoctor />} />
             <Route path="/doctors/:id" element={<DoctorDetail />} />
+            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
             <Route path="/monitoring" element={<MonitoringPage />} />
             <Route path="/health-risk" element={<HealthRiskPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
