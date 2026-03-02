@@ -19,9 +19,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { DownloadCloud, FileText, Plus, Search, UserRound, IndianRupee } from "lucide-react";
 import { mockBills } from "@/data/mockData";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { Bill } from "@/types/bill";
 
 const BillingPage = () => {
   const navigate = useNavigate();
@@ -40,8 +46,16 @@ const BillingPage = () => {
     navigate("/billing/new");
   };
 
-  const handleViewBill = (id: string) => {
-    navigate(`/billing/${id}`);
+  const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+
+  const handleViewBill = (bill: Bill) => {
+    setSelectedBill(bill);
+  };
+
+  const handleDownloadPDF = (bill: Bill) => {
+    toast.success(`Downloading PDF for Bill #${bill.id}`, {
+      description: `Invoice for ${bill.patientName} — ₹${bill.total.toFixed(2)}`,
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -168,13 +182,14 @@ const BillingPage = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleViewBill(bill.id)}
+                            onClick={() => handleViewBill(bill)}
                           >
                             View
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
+                            onClick={() => handleDownloadPDF(bill)}
                           >
                             <DownloadCloud className="mr-1 h-3.5 w-3.5" />
                             PDF
@@ -199,6 +214,67 @@ const BillingPage = () => {
           </CardFooter>
         )}
       </Card>
+
+      {/* Bill Detail Dialog */}
+      <Dialog open={!!selectedBill} onOpenChange={() => setSelectedBill(null)}>
+        <DialogContent className="max-w-lg">
+          {selectedBill && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  Bill #{selectedBill.id}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-xs text-muted-foreground">Patient</p><p className="font-medium">{selectedBill.patientName}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Date</p><p className="font-medium">{selectedBill.date}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Status</p><Badge variant="outline" className={cn("capitalize", getStatusColor(selectedBill.paymentStatus))}>{selectedBill.paymentStatus}</Badge></div>
+                  {selectedBill.paymentMethod && <div><p className="text-xs text-muted-foreground">Payment Method</p><p className="font-medium capitalize">{selectedBill.paymentMethod}</p></div>}
+                </div>
+
+                <Separator />
+
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Items</p>
+                  <div className="space-y-2">
+                    {selectedBill.items.map((item) => (
+                      <div key={item.id} className="flex items-center justify-between text-sm rounded-md border p-2">
+                        <div>
+                          <p className="font-medium">{item.description}</p>
+                          <p className="text-xs text-muted-foreground capitalize">{item.category} · Qty: {item.quantity}</p>
+                        </div>
+                        <p className="font-medium flex items-center"><IndianRupee className="h-3 w-3" />{item.amount.toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="flex items-center"><IndianRupee className="h-3 w-3" />{selectedBill.subtotal.toFixed(2)}</span></div>
+                  {selectedBill.discount && <div className="flex justify-between"><span className="text-muted-foreground">Discount</span><span className="flex items-center text-green-600">-<IndianRupee className="h-3 w-3" />{selectedBill.discount.toFixed(2)}</span></div>}
+                  {selectedBill.tax && <div className="flex justify-between"><span className="text-muted-foreground">Tax</span><span className="flex items-center"><IndianRupee className="h-3 w-3" />{selectedBill.tax.toFixed(2)}</span></div>}
+                  <div className="flex justify-between font-bold text-base pt-1 border-t"><span>Total</span><span className="flex items-center"><IndianRupee className="h-3.5 w-3.5" />{selectedBill.total.toFixed(2)}</span></div>
+                </div>
+
+                {selectedBill.notes && (
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Notes</p>
+                    <p className="text-sm">{selectedBill.notes}</p>
+                  </div>
+                )}
+
+                <Button className="w-full gap-1" onClick={() => { handleDownloadPDF(selectedBill); setSelectedBill(null); }}>
+                  <DownloadCloud className="h-4 w-4" /> Download PDF
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
