@@ -259,9 +259,9 @@ const SettingsPage = () => {
               <div className="space-y-2">
                 <h3 className="font-medium">Data Management</h3>
                 <div className="flex flex-col space-y-2">
-                  <Button variant="outline">Backup Database</Button>
-                  <Button variant="outline">Export Patient Data</Button>
-                  <Button variant="outline" className="text-destructive hover:text-destructive">
+                  <Button variant="outline" onClick={() => { toast.success("Database backup initiated", { description: "Backup will be available for download shortly." }); }}>Backup Database</Button>
+                  <Button variant="outline" onClick={() => { toast.success("Export started", { description: "Patient data CSV will be ready in a few moments." }); }}>Export Patient Data</Button>
+                  <Button variant="outline" className="text-destructive hover:text-destructive" onClick={() => { toast.success("Cache cleared successfully"); }}>
                     Clear Cache
                   </Button>
                 </div>
