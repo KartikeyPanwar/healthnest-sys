@@ -7,6 +7,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import PatientsPage from "./pages/Patients";
 import NewPatient from "./pages/Patients/NewPatient";
+import PatientDetail from "./pages/Patients/PatientDetail";
 import AppointmentsPage from "./pages/Appointments";
 import NewAppointment from "./pages/Appointments/NewAppointment";
 import DoctorsPage from "./pages/Doctors";
