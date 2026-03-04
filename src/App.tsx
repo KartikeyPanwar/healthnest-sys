@@ -7,6 +7,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import PatientsPage from "./pages/Patients";
 import NewPatient from "./pages/Patients/NewPatient";
+import PatientDetail from "./pages/Patients/PatientDetail";
 import AppointmentsPage from "./pages/Appointments";
 import NewAppointment from "./pages/Appointments/NewAppointment";
 import DoctorsPage from "./pages/Doctors";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/patients/new" element={<NewPatient />} />
+            <Route path="/patients/:id" element={<PatientDetail />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
             <Route path="/appointments/new" element={<NewAppointment />} />
             <Route path="/doctors" element={<DoctorsPage />} />
