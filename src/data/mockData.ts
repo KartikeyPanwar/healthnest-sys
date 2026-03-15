@@ -30,7 +30,7 @@ export const mockPatients: Patient[] = [
     insuranceDetails: {
       provider: "Health Shield",
       policyNumber: "HS12345678",
-      expiryDate: "2023-12-31",
+      expiryDate: "2026-12-31",
     },
     status: "active",
     registeredDate: "2020-03-15",
@@ -58,7 +58,7 @@ export const mockPatients: Patient[] = [
     insuranceDetails: {
       provider: "MediCare Plus",
       policyNumber: "MC87654321",
-      expiryDate: "2023-09-30",
+      expiryDate: "2026-09-30",
     },
     status: "active",
     registeredDate: "2019-11-10",
@@ -86,7 +86,7 @@ export const mockPatients: Patient[] = [
     insuranceDetails: {
       provider: "Blue Cross",
       policyNumber: "BC56781234",
-      expiryDate: "2024-03-31",
+      expiryDate: "2027-03-31",
     },
     status: "active",
     registeredDate: "2021-01-20",
@@ -114,7 +114,7 @@ export const mockPatients: Patient[] = [
     insuranceDetails: {
       provider: "Aetna",
       policyNumber: "AE43218765",
-      expiryDate: "2023-10-31",
+      expiryDate: "2026-10-31",
     },
     status: "inactive",
     registeredDate: "2022-02-14",
@@ -209,13 +209,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "John Doe",
     doctorId: "D001",
     doctorName: "Dr. Emily White",
-    date: "2023-06-15",
+    date: "2026-03-15",
     time: "10:00 AM",
     duration: 30,
     service: "Cardiology Consultation",
     notes: "Follow-up on recent ECG results",
     status: "scheduled",
-    createdAt: "2023-06-01T10:30:00Z",
+    createdAt: "2026-03-01T10:30:00Z",
   },
   {
     id: "A002",
@@ -223,13 +223,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "Maria Garcia",
     doctorId: "D004",
     doctorName: "Dr. Sofia Rodriguez",
-    date: "2023-06-15",
+    date: "2026-03-15",
     time: "11:30 AM",
     duration: 45,
     service: "Dermatology Examination",
     notes: "Skin rash evaluation",
     status: "scheduled",
-    createdAt: "2023-06-03T14:15:00Z",
+    createdAt: "2026-03-03T14:15:00Z",
   },
   {
     id: "A003",
@@ -237,13 +237,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "Robert Johnson",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-14",
+    date: "2026-03-14",
     time: "09:15 AM",
     duration: 30,
     service: "Diabetes Management",
     notes: "Quarterly check-up",
     status: "completed",
-    createdAt: "2023-05-28T09:45:00Z",
+    createdAt: "2026-02-28T09:45:00Z",
   },
   {
     id: "A004",
@@ -251,13 +251,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "Sarah Williams",
     doctorId: "D003",
     doctorName: "Dr. James Wilson",
-    date: "2023-06-16",
+    date: "2026-03-16",
     time: "02:00 PM",
     duration: 60,
     service: "Physical Therapy Consultation",
     notes: "Knee pain assessment",
     status: "scheduled",
-    createdAt: "2023-06-05T11:20:00Z",
+    createdAt: "2026-03-05T11:20:00Z",
   },
   {
     id: "A005",
@@ -265,13 +265,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "John Doe",
     doctorId: "D001",
     doctorName: "Dr. Emily White",
-    date: "2023-06-01",
+    date: "2026-03-01",
     time: "03:30 PM",
     duration: 30,
     service: "Cardiology Follow-up",
     notes: "Medication adjustment",
     status: "completed",
-    createdAt: "2023-05-20T15:10:00Z",
+    createdAt: "2026-02-20T15:10:00Z",
   },
   {
     id: "A006",
@@ -279,13 +279,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "Maria Garcia",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-02",
+    date: "2026-03-02",
     time: "10:45 AM",
     duration: 30,
     service: "Asthma Management",
     notes: "Review inhaler technique",
     status: "completed",
-    createdAt: "2023-05-25T08:30:00Z",
+    createdAt: "2026-02-25T08:30:00Z",
   },
   {
     id: "A007",
@@ -293,13 +293,13 @@ export const mockAppointments: Appointment[] = [
     patientName: "Robert Johnson",
     doctorId: "D001",
     doctorName: "Dr. Emily White",
-    date: "2023-07-01",
+    date: "2026-04-01",
     time: "11:00 AM",
     duration: 45,
     service: "Cardiology Consultation",
     notes: "Chest pain evaluation",
     status: "scheduled",
-    createdAt: "2023-06-10T13:25:00Z",
+    createdAt: "2026-03-10T13:25:00Z",
   },
 ];
 
@@ -311,7 +311,7 @@ export const mockPrescriptions: Prescription[] = [
     patientName: "John Doe",
     doctorId: "D001",
     doctorName: "Dr. Emily White",
-    date: "2023-06-01",
+    date: "2026-03-01",
     diagnosis: "Hypertension, well-controlled",
     medications: [
       {
@@ -331,10 +331,10 @@ export const mockPrescriptions: Prescription[] = [
     ],
     instructions: "Maintain low-salt diet, regular exercise",
     followUp: {
-      date: "2023-07-01",
+      date: "2026-04-01",
       notes: "Bring blood pressure log",
     },
-    createdAt: "2023-06-01T15:45:00Z",
+    createdAt: "2026-03-01T15:45:00Z",
   },
   {
     id: "PR002",
@@ -342,7 +342,7 @@ export const mockPrescriptions: Prescription[] = [
     patientName: "Maria Garcia",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-02",
+    date: "2026-03-02",
     diagnosis: "Acute bronchial asthma",
     medications: [
       {
@@ -362,10 +362,10 @@ export const mockPrescriptions: Prescription[] = [
     ],
     instructions: "Avoid triggers, use peak flow meter daily",
     followUp: {
-      date: "2023-06-16",
+      date: "2026-03-16",
       notes: "Follow up sooner if symptoms worsen",
     },
-    createdAt: "2023-06-02T11:30:00Z",
+    createdAt: "2026-03-02T11:30:00Z",
   },
   {
     id: "PR003",
@@ -373,7 +373,7 @@ export const mockPrescriptions: Prescription[] = [
     patientName: "Robert Johnson",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-14",
+    date: "2026-03-14",
     diagnosis: "Type 2 Diabetes, moderate control",
     medications: [
       {
@@ -393,10 +393,10 @@ export const mockPrescriptions: Prescription[] = [
     ],
     instructions: "Follow diabetic diet, monitor blood glucose twice daily",
     followUp: {
-      date: "2023-09-14",
+      date: "2026-06-14",
       notes: "Bring glucose log for review",
     },
-    createdAt: "2023-06-14T10:15:00Z",
+    createdAt: "2026-03-14T10:15:00Z",
   },
 ];
 
@@ -408,7 +408,7 @@ export const mockBills: Bill[] = [
     patientName: "John Doe",
     doctorId: "D001",
     doctorName: "Dr. Emily White",
-    date: "2023-06-01",
+    date: "2026-03-01",
     items: [
       {
         id: "BI001",
@@ -443,7 +443,7 @@ export const mockBills: Bill[] = [
     insuranceCoverage: 344,
     patientResponsibility: 86,
     notes: "Insurance claim #INS123456",
-    createdAt: "2023-06-01T16:30:00Z",
+    createdAt: "2026-03-01T16:30:00Z",
   },
   {
     id: "B002",
@@ -451,7 +451,7 @@ export const mockBills: Bill[] = [
     patientName: "Maria Garcia",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-02",
+    date: "2026-03-02",
     items: [
       {
         id: "BI004",
@@ -494,7 +494,7 @@ export const mockBills: Bill[] = [
     insuranceCoverage: 284,
     patientResponsibility: 71,
     notes: "Insurance claim pending",
-    createdAt: "2023-06-02T12:15:00Z",
+    createdAt: "2026-03-02T12:15:00Z",
   },
   {
     id: "B003",
@@ -502,7 +502,7 @@ export const mockBills: Bill[] = [
     patientName: "Robert Johnson",
     doctorId: "D002",
     doctorName: "Dr. Michael Chen",
-    date: "2023-06-14",
+    date: "2026-03-14",
     items: [
       {
         id: "BI008",
@@ -552,7 +552,7 @@ export const mockBills: Bill[] = [
     paymentStatus: "paid",
     paymentMethod: "card",
     notes: "10% senior discount applied",
-    createdAt: "2023-06-14T11:00:00Z",
+    createdAt: "2026-03-14T11:00:00Z",
   },
 ];
 
@@ -572,7 +572,7 @@ export const dashboardStats = {
 export const getTodayAppointments = (): Appointment[] => {
   const today = new Date().toISOString().split('T')[0];
   return mockAppointments.filter(appointment => 
-    appointment.date === today || appointment.date === "2023-06-15" // For demo purposes
+    appointment.date === today || appointment.date === "2026-03-15" // For demo purposes
   );
 };
 
