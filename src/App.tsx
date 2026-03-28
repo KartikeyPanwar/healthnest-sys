@@ -2,7 +2,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import PatientsPage from "./pages/Patients";
@@ -35,34 +37,36 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          
-          <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/patients" element={<PatientsPage />} />
-            <Route path="/patients/new" element={<NewPatient />} />
-            <Route path="/patients/:id" element={<PatientDetail />} />
-            <Route path="/appointments" element={<AppointmentsPage />} />
-            <Route path="/appointments/new" element={<NewAppointment />} />
-            <Route path="/doctors" element={<DoctorsPage />} />
-            <Route path="/doctors/new" element={<NewDoctor />} />
-            <Route path="/doctors/:id" element={<DoctorDetail />} />
-            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-            <Route path="/monitoring" element={<MonitoringPage />} />
-            <Route path="/health-risk" element={<HealthRiskPage />} />
-            <Route path="/alerts" element={<AlertsPage />} />
-            <Route path="/records" element={<MedicalRecordsPage />} />
-            <Route path="/records/prescription/new" element={<NewPrescription />} />
-            <Route path="/billing" element={<BillingPage />} />
-            <Route path="/billing/new" element={<NewBill />} />
-            <Route path="/staff" element={<StaffPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/patients" element={<PatientsPage />} />
+              <Route path="/patients/new" element={<NewPatient />} />
+              <Route path="/patients/:id" element={<PatientDetail />} />
+              <Route path="/appointments" element={<AppointmentsPage />} />
+              <Route path="/appointments/new" element={<NewAppointment />} />
+              <Route path="/doctors" element={<DoctorsPage />} />
+              <Route path="/doctors/new" element={<NewDoctor />} />
+              <Route path="/doctors/:id" element={<DoctorDetail />} />
+              <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+              <Route path="/monitoring" element={<MonitoringPage />} />
+              <Route path="/health-risk" element={<HealthRiskPage />} />
+              <Route path="/alerts" element={<AlertsPage />} />
+              <Route path="/records" element={<MedicalRecordsPage />} />
+              <Route path="/records/prescription/new" element={<NewPrescription />} />
+              <Route path="/billing" element={<BillingPage />} />
+              <Route path="/billing/new" element={<NewBill />} />
+              <Route path="/staff" element={<StaffPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
