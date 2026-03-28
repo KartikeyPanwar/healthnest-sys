@@ -58,6 +58,7 @@ type PatientFormValues = z.infer<typeof patientSchema>;
 const NewPatient = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const createPatient = useCreatePatient();
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientSchema),
