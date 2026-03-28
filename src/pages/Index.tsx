@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CalendarPlus, ClipboardList, UserPlus, Activity, HeartPulse, IndianRupee } from "lucide-react";
+import { ArrowRight, CalendarPlus, ClipboardList, UserPlus, Activity, HeartPulse, Users, Calendar, FileText, Stethoscope } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -12,153 +12,172 @@ const Index = () => {
       title: "Schedule Appointment",
       description: "Create a new patient appointment",
       icon: CalendarPlus,
-      action: () => navigate("/appointments/new")
+      action: () => navigate("/appointments/new"),
     },
     {
       title: "Register Patient",
       description: "Add a new patient to the system",
       icon: UserPlus,
-      action: () => navigate("/patients/new")
+      action: () => navigate("/patients/new"),
     },
     {
       title: "View Appointments",
       description: "See today's scheduled appointments",
       icon: ClipboardList,
-      action: () => navigate("/appointments")
+      action: () => navigate("/appointments"),
     },
     {
       title: "Patient Records",
       description: "Access medical records and history",
       icon: HeartPulse,
-      action: () => navigate("/records")
+      action: () => navigate("/records"),
     },
   ];
-  
+
+  const stats = [
+    {
+      title: "Total Patients",
+      value: "2,583",
+      change: "+8.2%",
+      changeLabel: "from last month",
+      icon: Users,
+      progress: 75,
+      color: "from-primary to-primary/70",
+      iconBg: "bg-primary/10 text-primary",
+    },
+    {
+      title: "Today's Appointments",
+      value: "24",
+      change: "+4",
+      changeLabel: "more than yesterday",
+      icon: Calendar,
+      progress: 40,
+      color: "from-secondary to-secondary/70",
+      iconBg: "bg-secondary/10 text-secondary",
+    },
+    {
+      title: "Pending Reports",
+      value: "7",
+      change: "2",
+      changeLabel: "urgent",
+      icon: FileText,
+      progress: 20,
+      color: "from-destructive to-destructive/70",
+      iconBg: "bg-destructive/10 text-destructive",
+    },
+    {
+      title: "Staff on Duty",
+      value: "18",
+      change: "3 doctors",
+      changeLabel: "15 staff",
+      icon: Stethoscope,
+      progress: 60,
+      color: "from-primary to-secondary",
+      iconBg: "bg-accent text-primary",
+    },
+  ];
+
+  const activities = [
+    { title: "New patient registered", desc: "John Doe was added to the system", time: "10 minutes ago", icon: UserPlus, iconColor: "text-secondary" },
+    { title: "Appointment rescheduled", desc: "Jane Smith moved to Thursday", time: "1 hour ago", icon: Calendar, iconColor: "text-primary" },
+    { title: "Lab results updated", desc: "Blood work results uploaded for Patient #254", time: "3 hours ago", icon: FileText, iconColor: "text-amber-500" },
+    { title: "Prescription created", desc: "Dr. Williams created prescription for Patient #118", time: "5 hours ago", icon: ClipboardList, iconColor: "text-primary" },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome to HealthNest</h1>
-        <p className="text-muted-foreground mt-2">
-          Your comprehensive hospital management dashboard
-        </p>
+    <div className="space-y-8">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-secondary p-8 text-primary-foreground shadow-lg">
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/5 blur-xl" />
+        <div className="relative z-10">
+          <p className="text-sm font-medium text-primary-foreground/80 mb-1">Good day 👋</p>
+          <h1 className="text-3xl font-bold tracking-tight">Welcome to HealthNest</h1>
+          <p className="mt-2 max-w-lg text-primary-foreground/80">
+            Your comprehensive hospital management dashboard. Monitor patients, manage appointments, and streamline operations — all in one place.
+          </p>
+        </div>
       </div>
-      
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Patients</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2,583</div>
-            <p className="text-xs text-muted-foreground mt-1">+8.2% from last month</p>
-            <div className="mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-1 bg-primary" style={{ width: '75%' }}></div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Today's Appointments</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground mt-1">4 more than yesterday</p>
-            <div className="mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-1 bg-primary" style={{ width: '40%' }}></div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Pending Reports</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground mt-1">2 urgent</p>
-            <div className="mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-1 bg-destructive" style={{ width: '20%' }}></div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Staff on Duty</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground mt-1">3 doctors, 15 staff</p>
-            <div className="mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-1 bg-primary" style={{ width: '60%' }}></div>
-            </div>
-          </CardContent>
-        </Card>
+
+      {/* Stats Grid */}
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat) => (
+          <Card key={stat.title} className="group relative overflow-hidden border-none shadow-md hover:shadow-lg transition-all duration-300">
+            <div className={`absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r ${stat.color} opacity-60 group-hover:opacity-100 transition-opacity`} />
+            <CardContent className="p-5">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">{stat.change}</span>{" "}
+                    {stat.changeLabel}
+                  </p>
+                </div>
+                <div className={`rounded-xl p-3 ${stat.iconBg}`}>
+                  <stat.icon className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="mt-4 h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                <div
+                  className={`h-full rounded-full bg-gradient-to-r ${stat.color} transition-all duration-700`}
+                  style={{ width: `${stat.progress}%` }}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-      
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+
+      {/* Bottom Grid */}
+      <div className="grid gap-5 lg:grid-cols-2">
+        {/* Quick Actions */}
+        <Card className="border-none shadow-md">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Quick Actions</CardTitle>
             <CardDescription>Common tasks you can perform</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3">
+            <div className="grid gap-2.5">
               {quickActions.map((action, index) => (
-                <Button 
-                  key={index} 
-                  variant="outline" 
-                  className="justify-between h-auto py-3"
+                <button
+                  key={index}
                   onClick={action.action}
+                  className="group flex items-center justify-between rounded-xl border border-border/60 bg-card px-4 py-3.5 text-left transition-all duration-200 hover:border-primary/30 hover:bg-accent/50 hover:shadow-sm"
                 >
-                  <div className="flex items-center gap-3">
-                    <action.icon className="h-5 w-5 text-primary" />
-                    <div className="text-left">
-                      <div className="font-medium">{action.title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {action.description}
-                      </div>
+                  <div className="flex items-center gap-3.5">
+                    <div className="rounded-lg bg-primary/10 p-2.5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
+                      <action.icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold">{action.title}</div>
+                      <div className="text-xs text-muted-foreground">{action.description}</div>
                     </div>
                   </div>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+                </button>
               ))}
             </div>
           </CardContent>
         </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+
+        {/* Recent Activity */}
+        <Card className="border-none shadow-md">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Recent Activity</CardTitle>
             <CardDescription>Latest system activities</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[1, 2, 3, 4].map((_, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <Activity className="h-4 w-4 text-primary" />
+              {activities.map((item, i) => (
+                <div key={i} className="group flex items-start gap-3.5 rounded-xl p-2.5 transition-colors hover:bg-accent/40">
+                  <div className="mt-0.5 rounded-lg bg-accent p-2">
+                    <item.icon className={`h-4 w-4 ${item.iconColor}`} />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">
-                      {i === 0 ? "New patient registered" : 
-                       i === 1 ? "Appointment rescheduled" : 
-                       i === 2 ? "Lab results updated" : 
-                       "Prescription created"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {i === 0 ? "John Doe was added to the system" : 
-                       i === 1 ? "Jane Smith moved to Thursday" : 
-                       i === 2 ? "Blood work results uploaded for Patient #254" : 
-                       "Dr. Williams created prescription for Patient #118"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {i === 0 ? "10 minutes ago" : 
-                       i === 1 ? "1 hour ago" : 
-                       i === 2 ? "3 hours ago" : 
-                       "5 hours ago"}
-                    </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold">{item.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{item.desc}</p>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">{item.time}</p>
                   </div>
                 </div>
               ))}
