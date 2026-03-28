@@ -4,8 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { v4 as uuidv4 } from 'uuid';
-import { mockPatients } from "@/data/mockData";
+import { useCreatePatient } from "@/hooks/useSupabaseData";
 
 import {
   Card,
@@ -78,48 +77,43 @@ const NewPatient = () => {
     navigate("/patients");
   };
 
-  const onSubmit = (values: PatientFormValues) => {
+  const onSubmit = async (values: PatientFormValues) => {
     setIsSubmitting(true);
-    console.log("Patient values:", values);
-    
-    // Simulate API call
-    setTimeout(() => {
-      mockPatients.unshift({
-        id: uuidv4().slice(0, 8).toUpperCase(),
+    try {
+      await createPatient.mutateAsync({
         name: values.name,
         gender: values.gender,
         dob: values.dob,
-        bloodType: values.bloodType || "Unknown",
+        blood_type: values.bloodType || null,
         address: values.address,
         phone: values.phone,
         email: values.email,
-        emergencyContact: {
+        emergency_contact: {
           name: values.emergencyName,
           relationship: values.emergencyRelationship,
           phone: values.emergencyPhone,
         },
-        medicalHistory: {
+        medical_history: {
           allergies: values.allergies ? values.allergies.split(",").map(s => s.trim()) : [],
           conditions: values.conditions ? values.conditions.split(",").map(s => s.trim()) : [],
           medications: [],
           surgeries: [],
         },
-        insuranceDetails: values.provider ? {
+        insurance_details: values.provider ? {
           provider: values.provider,
           policyNumber: values.policyNumber || "",
           expiryDate: values.expiryDate || "",
-        } : undefined,
-        status: "active",
-        registeredDate: new Date().toISOString().split("T")[0],
+        } : {},
       });
-
       toast.success("Patient registered successfully", {
         description: `Patient ${values.name} has been added to the system`,
       });
-      
-      setIsSubmitting(false);
       navigate("/patients");
-    }, 1000);
+    } catch (error: any) {
+      toast.error("Failed to register patient", { description: error.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
