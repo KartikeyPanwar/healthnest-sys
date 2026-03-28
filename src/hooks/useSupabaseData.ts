@@ -33,8 +33,8 @@ export const usePatient = (id: string) =>
 export const useCreatePatient = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (patient: Record<string, unknown>) => {
-      const { data, error } = await supabase.from("patients").insert(patient).select().single();
+    mutationFn: async (patient: any) => {
+      const { data, error } = await supabase.from("patients").insert([patient]).select().single();
       if (error) throw error;
       return data;
     },
@@ -74,8 +74,8 @@ export const useDoctor = (id: string) =>
 export const useCreateDoctor = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (doctor: Record<string, unknown>) => {
-      const { data, error } = await supabase.from("doctors").insert(doctor).select().single();
+    mutationFn: async (doctor: any) => {
+      const { data, error } = await supabase.from("doctors").insert([doctor]).select().single();
       if (error) throw error;
       return data;
     },
@@ -104,8 +104,8 @@ export const useAppointments = () =>
 export const useCreateAppointment = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (appt: Record<string, unknown>) => {
-      const { data, error } = await supabase.from("appointments").insert(appt).select().single();
+    mutationFn: async (appt: any) => {
+      const { data, error } = await supabase.from("appointments").insert([appt]).select().single();
       if (error) throw error;
       return data;
     },
@@ -116,7 +116,7 @@ export const useCreateAppointment = () => {
 export const useUpdateAppointment = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string } & Record<string, unknown>) => {
+    mutationFn: async ({ id, ...updates }: { id: string;[key: string]: any }) => {
       const { data, error } = await supabase.from("appointments").update(updates).eq("id", id).select().single();
       if (error) throw error;
       return data;
@@ -146,8 +146,8 @@ export const usePrescriptions = () =>
 export const useCreatePrescription = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (rx: Record<string, unknown>) => {
-      const { data, error } = await supabase.from("prescriptions").insert(rx).select().single();
+    mutationFn: async (rx: any) => {
+      const { data, error } = await supabase.from("prescriptions").insert([rx]).select().single();
       if (error) throw error;
       return data;
     },
@@ -176,8 +176,8 @@ export const useBills = () =>
 export const useCreateBill = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (bill: Record<string, unknown>) => {
-      const { data, error } = await supabase.from("bills").insert(bill).select().single();
+    mutationFn: async (bill: any) => {
+      const { data, error } = await supabase.from("bills").insert([bill]).select().single();
       if (error) throw error;
       return data;
     },
