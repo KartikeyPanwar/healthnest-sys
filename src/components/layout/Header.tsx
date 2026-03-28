@@ -1,5 +1,6 @@
-import { Bell, HelpCircle, Menu, User } from "lucide-react";
+import { Bell, HelpCircle, LogOut, Menu, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,6 +33,7 @@ interface Notification {
 }
 
 const Header = ({ toggleSidebar }: HeaderProps) => {
+  const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "1",
@@ -189,7 +191,9 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
             <DropdownMenuItem onClick={handleProfileClick}>Profile</DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/login")}>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={async () => { await signOut(); navigate("/login"); }}>
+              <LogOut className="mr-2 h-4 w-4" /> Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

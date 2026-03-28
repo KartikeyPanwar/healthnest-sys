@@ -32,7 +32,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { v4 as uuidv4 } from "uuid";
+import { useCreateDoctor } from "@/hooks/useSupabaseData";
 
 // Form schema
 const formSchema = z.object({
@@ -68,6 +68,7 @@ const departments = [
 const NewDoctor = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const createDoctor = useCreateDoctor();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -88,14 +89,10 @@ const NewDoctor = () => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    
-    // Simulate an API call
-    setTimeout(() => {
-      // Create doctor object
-      const newDoctor = {
-        id: uuidv4(),
+    try {
+      await createDoctor.mutateAsync({
         name: data.name,
         gender: data.gender,
         department: data.department,
@@ -111,20 +108,14 @@ const NewDoctor = () => {
           endTime: data.endTime,
         },
         status: data.status,
-        joiningDate: new Date().toISOString().split("T")[0],
-      };
-
-      // In a real application, this would be an API call to save the doctor
-      console.log("New doctor:", newDoctor);
-      
-      // Show success message
+      });
       toast.success("Doctor added successfully");
-      
-      // Navigate back to doctors page
       navigate("/doctors");
-      
+    } catch (error: any) {
+      toast.error("Failed to add doctor", { description: error.message });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
