@@ -1,61 +1,56 @@
 
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import StatsCard from "@/components/dashboard/StatsCard";
 import AppointmentList from "@/components/appointments/AppointmentList";
 import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
-  Activity, CalendarClock, IndianRupee, FileText, Pill, PlusCircle, UserRound, Users, Loader2,
+  CalendarClock, Loader2, PlusCircle, UserRound, Users, Clock, CheckCircle2, XCircle, CalendarDays,
 } from "lucide-react";
-import { usePatients, useDoctors, useAppointments, useBills } from "@/hooks/useSupabaseData";
+import { usePatients, useDoctors, useAppointments } from "@/hooks/useSupabaseData";
 import { Appointment } from "@/types/appointment";
 
 const Dashboard = () => {
-  const [selectedTab, setSelectedTab] = useState("overview");
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const { data: patients, isLoading: pLoading } = usePatients();
   const { data: doctors, isLoading: dLoading } = useDoctors();
-  const { data: appointments, isLoading: aLoading } = useAppointments();
-  const { data: bills } = useBills();
+  const { data: rawAppointments, isLoading: aLoading } = useAppointments();
 
   const isLoading = pLoading || dLoading || aLoading;
 
-  const totalRevenue = (bills ?? []).reduce((sum: number, b: any) => sum + Number(b.total || 0), 0);
+  const appointments: Appointment[] = (rawAppointments ?? []).map((a: any) => ({
+    id: a.id,
+    patientId: a.patient_id,
+    patientName: a.patientName,
+    doctorId: a.doctor_id,
+    doctorName: a.doctorName,
+    date: a.date,
+    time: a.time,
+    duration: a.duration ?? 30,
+    service: a.service ?? "",
+    notes: a.notes ?? "",
+    status: a.status,
+    createdAt: a.created_at ?? "",
+  }));
 
   const todayStr = new Date().toISOString().split("T")[0];
-  const todayAppointments: Appointment[] = (appointments ?? [])
-    .filter((a: any) => a.date === todayStr)
-    .map((a: any) => ({
-      id: a.id,
-      patientId: a.patient_id,
-      patientName: a.patientName,
-      doctorId: a.doctor_id,
-      doctorName: a.doctorName,
-      date: a.date,
-      time: a.time,
-      duration: a.duration ?? 30,
-      service: a.service ?? "",
-      notes: a.notes ?? "",
-      status: a.status,
-      createdAt: a.created_at ?? "",
-    }));
-
-  const recentPatients = (patients ?? []).slice(0, 5);
-
-  const handleNewAppointment = () => navigate("/appointments/new");
+  const todayAppointments = appointments.filter((a) => a.date === todayStr);
+  const upcoming = appointments.filter((a) => a.status === "scheduled" && a.date >= todayStr);
+  const completedCount = appointments.filter((a) => a.status === "completed").length;
+  const cancelledCount = appointments.filter((a) => a.status === "cancelled").length;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <Button onClick={handleNewAppointment}>
+        <div>
+          <h1 className="text-2xl font-semibold">Appointment Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Overview of today's schedule and upcoming appointments</p>
+        </div>
+        <Button onClick={() => navigate("/appointments/new")}>
           <PlusCircle className="mr-2 h-4 w-4" /> New Appointment
         </Button>
       </div>
@@ -65,99 +60,147 @@ const Dashboard = () => {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : (
-        <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="appointments">Appointments</TabsTrigger>
-            <TabsTrigger value="patients">Patients</TabsTrigger>
-          </TabsList>
+        <>
+          {/* Stats Row */}
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <StatsCard
+              title="Today's Appointments"
+              value={todayAppointments.length}
+              icon={<CalendarDays className="h-5 w-5" />}
+              description={`${todayAppointments.filter(a => a.status === 'scheduled').length} pending`}
+            />
+            <StatsCard
+              title="Upcoming"
+              value={upcoming.length}
+              icon={<Clock className="h-5 w-5" />}
+              description="Scheduled visits"
+            />
+            <StatsCard
+              title="Completed"
+              value={completedCount}
+              icon={<CheckCircle2 className="h-5 w-5" />}
+              description="Finished appointments"
+            />
+            <StatsCard
+              title="Total Patients"
+              value={patients?.length ?? 0}
+              icon={<Users className="h-5 w-5" />}
+              description={`${doctors?.length ?? 0} doctors active`}
+            />
+          </div>
 
-          <TabsContent value="overview">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <StatsCard title="Total Patients" value={patients?.length ?? 0} icon={<Users className="h-5 w-5" />} description="Total registered patients" />
-              <StatsCard title="Doctors" value={doctors?.length ?? 0} icon={<UserRound className="h-5 w-5" />} description="Active medical staff" />
-              <StatsCard title="Appointments" value={appointments?.length ?? 0} icon={<CalendarClock className="h-5 w-5" />} description="Total scheduled" />
-              <StatsCard title="Revenue" value={`₹${totalRevenue.toLocaleString()}`} icon={<IndianRupee className="h-5 w-5" />} description="Total billing" />
-            </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {/* Today's Schedule - takes 2 columns */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <CalendarClock className="h-5 w-5 text-primary" />
+                      Today's Schedule
+                    </CardTitle>
+                    <CardDescription>
+                      {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                    </CardDescription>
+                  </div>
+                  <Badge variant="secondary">{todayAppointments.length} appointments</Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {todayAppointments.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <CalendarDays className="mb-3 h-12 w-12 text-muted-foreground/50" />
+                    <h3 className="text-lg font-medium">No appointments today</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">Schedule a new appointment to get started</p>
+                    <Button className="mt-4" size="sm" onClick={() => navigate("/appointments/new")}>
+                      <PlusCircle className="mr-2 h-4 w-4" /> Schedule Now
+                    </Button>
+                  </div>
+                ) : (
+                  <AppointmentList appointments={todayAppointments} />
+                )}
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" className="w-full" onClick={() => navigate("/appointments")}>
+                  View All Appointments
+                </Button>
+              </CardFooter>
+            </Card>
 
-            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Today's Appointments</CardTitle>
-                  <CardDescription>Manage your appointments for today</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {todayAppointments.length === 0 ? (
-                    <div className="py-8 text-center text-sm text-muted-foreground">No appointments today</div>
-                  ) : (
-                    <AppointmentList appointments={todayAppointments} />
-                  )}
-                </CardContent>
-                <CardFooter>
-                  <Button variant="ghost" className="w-full" onClick={() => navigate("/appointments")}>View All Appointments</Button>
-                </CardFooter>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Patients</CardTitle>
-                  <CardDescription>Latest registered patients</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {recentPatients.length === 0 ? (
-                    <div className="py-8 text-center text-sm text-muted-foreground">No patients yet</div>
-                  ) : (
-                    <div className="rounded-md border">
-                      <div className="divide-y">
-                        {recentPatients.map((patient: any) => (
-                          <div key={patient.id} className="flex items-center justify-between p-3">
-                            <div className="flex items-center">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                                <UserRound className="h-4 w-4 text-primary" />
-                              </div>
-                              <div className="ml-3">
-                                <p className="text-sm font-medium">{patient.name}</p>
-                                <p className="text-xs text-muted-foreground">{patient.email}</p>
-                              </div>
-                            </div>
-                            <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => navigate(`/patients/${patient.id}`)}>View</Button>
+            {/* Upcoming Appointments Sidebar */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Upcoming Appointments</CardTitle>
+                <CardDescription>Next scheduled visits</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {upcoming.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">No upcoming appointments</p>
+                ) : (
+                  <div className="space-y-3">
+                    {upcoming.slice(0, 8).map((a) => (
+                      <div key={a.id} className="flex items-start gap-3 rounded-lg border p-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                          <UserRound className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">{a.patientName}</p>
+                          <p className="text-xs text-muted-foreground">{a.doctorName}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">{a.date}</Badge>
+                            <span className="text-xs text-muted-foreground">{a.time}</span>
                           </div>
-                        ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+              {upcoming.length > 8 && (
                 <CardFooter>
-                  <Button variant="ghost" className="w-full" onClick={() => navigate("/patients")}>View All Patients</Button>
+                  <Button variant="ghost" size="sm" className="w-full" onClick={() => navigate("/appointments")}>
+                    View {upcoming.length - 8} more
+                  </Button>
                 </CardFooter>
-              </Card>
-            </div>
-          </TabsContent>
+              )}
+            </Card>
+          </div>
 
-          <TabsContent value="appointments">
+          {/* Quick Stats Row */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Card>
-              <CardHeader>
-                <CardTitle>All Appointments</CardTitle>
-                <CardDescription>View and manage all scheduled appointments</CardDescription>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Cancellation Rate</CardTitle>
               </CardHeader>
               <CardContent>
-                <Button className="mb-4" onClick={() => navigate("/appointments")}>Go to Appointments Page</Button>
+                <p className="text-2xl font-bold">
+                  {appointments.length > 0 ? ((cancelledCount / appointments.length) * 100).toFixed(1) : 0}%
+                </p>
+                <p className="text-xs text-muted-foreground">{cancelledCount} cancelled of {appointments.length} total</p>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="patients">
             <Card>
-              <CardHeader>
-                <CardTitle>Patient Management</CardTitle>
-                <CardDescription>View and manage all registered patients</CardDescription>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Completion Rate</CardTitle>
               </CardHeader>
               <CardContent>
-                <Button className="mb-4" onClick={() => navigate("/patients")}>Go to Patients Page</Button>
+                <p className="text-2xl font-bold">
+                  {appointments.length > 0 ? ((completedCount / appointments.length) * 100).toFixed(1) : 0}%
+                </p>
+                <p className="text-xs text-muted-foreground">{completedCount} completed of {appointments.length} total</p>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Doctors</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{doctors?.length ?? 0}</p>
+                <p className="text-xs text-muted-foreground">Available for appointments</p>
+              </CardContent>
+            </Card>
+          </div>
+        </>
       )}
     </div>
   );

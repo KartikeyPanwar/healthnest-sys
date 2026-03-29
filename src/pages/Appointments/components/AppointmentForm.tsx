@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from 'uuid';
 
 import { Form } from "@/components/ui/form";
 import { appointmentSchema, AppointmentFormValues } from "../schema";
-import { mockDoctors, mockServices, timeSlots } from "../data";
+import { mockServices, timeSlots } from "../data";
 import {
   AppointmentDatePicker,
   AppointmentFormActions,
@@ -18,8 +17,7 @@ import {
   PatientSelector,
   ServiceSelector
 } from "@/components/appointments/scheduling";
-import { mockAppointments } from "@/data/mockData";
-import { Appointment } from "@/types/appointment";
+import { useCreateAppointment, useDoctors } from "@/hooks/useSupabaseData";
 
 interface AppointmentFormProps {
   onCancel: () => void;
@@ -28,12 +26,19 @@ interface AppointmentFormProps {
 const AppointmentForm = ({ onCancel }: AppointmentFormProps) => {
   const navigate = useNavigate();
   const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createAppointment = useCreateAppointment();
+  const { data: dbDoctors } = useDoctors();
+
+  const doctors = (dbDoctors ?? []).map((d: any) => ({
+    id: d.id,
+    name: d.name,
+    department: d.specialization || d.department || "General",
+  }));
   
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
-      patientName: "",
+      patientId: "",
       doctorId: "",
       service: "",
       duration: 30,
@@ -42,44 +47,32 @@ const AppointmentForm = ({ onCancel }: AppointmentFormProps) => {
   });
 
   const onSubmit = (values: AppointmentFormValues) => {
-    setIsSubmitting(true);
-    console.log("Appointment values:", values);
-    
-    // Simulate API call
-    setTimeout(() => {
-      const doctorName = getDoctorName(values.doctorId);
-      
-      // Create new appointment object
-      const newAppointment: Appointment = {
-        id: uuidv4(),
-        patientId: uuidv4(),
-        patientName: values.patientName,
-        doctorId: values.doctorId,
-        doctorName: doctorName || "Unknown Doctor",
-        date: values.date.toLocaleDateString(),
+    createAppointment.mutate(
+      {
+        patient_id: values.patientId,
+        doctor_id: values.doctorId,
+        date: values.date.toISOString().split("T")[0],
         time: values.time,
         duration: values.duration,
         service: values.service,
         notes: values.notes || "",
-        status: 'scheduled',
-        createdAt: new Date().toISOString(),
-      };
-      
-      // Add new appointment to the mock data
-      mockAppointments.unshift(newAppointment);
-      
-      toast.success("Appointment scheduled successfully", {
-        description: `Appointment with ${doctorName} on ${values.date.toLocaleDateString()} at ${values.time}`,
-      });
-      
-      setIsSubmitting(false);
-      navigate("/appointments");
-    }, 1000);
-  };
-
-  const getDoctorName = (doctorId: string) => {
-    const doctor = mockDoctors.find(d => d.id === doctorId);
-    return doctor ? doctor.name : "Unknown Doctor";
+        status: "scheduled",
+      },
+      {
+        onSuccess: () => {
+          const doctor = doctors.find((d: any) => d.id === values.doctorId);
+          toast.success("Appointment scheduled successfully", {
+            description: `Appointment with ${doctor?.name ?? "Doctor"} on ${values.date.toLocaleDateString()} at ${values.time}`,
+          });
+          navigate("/appointments");
+        },
+        onError: (error) => {
+          toast.error("Failed to schedule appointment", {
+            description: error.message,
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -90,7 +83,7 @@ const AppointmentForm = ({ onCancel }: AppointmentFormProps) => {
           
           <DoctorSelector 
             form={form} 
-            doctors={mockDoctors} 
+            doctors={doctors} 
             onDoctorChange={setSelectedDoctor} 
           />
           
@@ -111,7 +104,7 @@ const AppointmentForm = ({ onCancel }: AppointmentFormProps) => {
 
         <AppointmentFormActions 
           onCancel={onCancel} 
-          isSubmitting={isSubmitting} 
+          isSubmitting={createAppointment.isPending} 
         />
       </form>
     </Form>

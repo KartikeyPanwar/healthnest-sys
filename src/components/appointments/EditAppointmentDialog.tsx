@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { appointmentSchema, AppointmentFormValues } from "@/pages/Appointments/schema";
-import { mockDoctors, mockServices, timeSlots } from "@/pages/Appointments/data";
+import { mockServices, timeSlots } from "@/pages/Appointments/data";
 import {
   AppointmentDatePicker,
   AppointmentFormActions,
@@ -23,6 +23,7 @@ import {
   ServiceSelector
 } from "@/components/appointments/scheduling";
 import { Appointment } from "@/types/appointment";
+import { useDoctors } from "@/hooks/useSupabaseData";
 
 interface EditAppointmentDialogProps {
   appointment: Appointment | null;
@@ -41,8 +42,14 @@ export const EditAppointmentDialog = ({
   const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>(
     appointment?.doctorId
   );
+  const { data: dbDoctors } = useDoctors();
 
-  // Convert string date to Date object for the form
+  const doctors = (dbDoctors ?? []).map((d: any) => ({
+    id: d.id,
+    name: d.name,
+    department: d.specialization || d.department || "General",
+  }));
+
   const getDateFromString = (dateString: string | undefined) => {
     if (!dateString) return new Date();
     return new Date(dateString);
@@ -51,7 +58,7 @@ export const EditAppointmentDialog = ({
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
-      patientName: appointment?.patientName || "",
+      patientId: appointment?.patientId || "",
       doctorId: appointment?.doctorId || "",
       service: appointment?.service || "",
       date: getDateFromString(appointment?.date),
@@ -66,40 +73,32 @@ export const EditAppointmentDialog = ({
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const doctorName = getDoctorName(values.doctorId);
-      
-      const updatedAppointment: Appointment = {
-        ...appointment,
-        patientName: values.patientName,
-        doctorId: values.doctorId,
-        doctorName: doctorName || "Unknown Doctor",
-        date: values.date.toLocaleDateString(),
-        time: values.time,
-        duration: values.duration,
-        service: values.service,
-        notes: values.notes || "",
-      };
-      
-      onSave(updatedAppointment);
-      
-      toast.success("Appointment updated successfully", {
-        description: `Appointment with ${doctorName} on ${values.date.toLocaleDateString()} at ${values.time}`,
-      });
-      
-      setIsSubmitting(false);
-      onOpenChange(false);
-    }, 500);
+    const doctor = doctors.find((d: any) => d.id === values.doctorId);
+    
+    const updatedAppointment: Appointment = {
+      ...appointment,
+      patientId: values.patientId,
+      doctorId: values.doctorId,
+      doctorName: doctor?.name || "Unknown Doctor",
+      date: values.date.toISOString().split("T")[0],
+      time: values.time,
+      duration: values.duration,
+      service: values.service,
+      notes: values.notes || "",
+    };
+    
+    onSave(updatedAppointment);
+    
+    toast.success("Appointment updated successfully", {
+      description: `Appointment with ${doctor?.name ?? "Doctor"} on ${values.date.toLocaleDateString()} at ${values.time}`,
+    });
+    
+    setIsSubmitting(false);
+    onOpenChange(false);
   };
 
   const handleCancel = () => {
     onOpenChange(false);
-  };
-
-  const getDoctorName = (doctorId: string) => {
-    const doctor = mockDoctors.find(d => d.id === doctorId);
-    return doctor ? doctor.name : "Unknown Doctor";
   };
 
   return (
@@ -116,7 +115,7 @@ export const EditAppointmentDialog = ({
               
               <DoctorSelector 
                 form={form} 
-                doctors={mockDoctors} 
+                doctors={doctors} 
                 onDoctorChange={setSelectedDoctor} 
               />
               
