@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CalendarClock, Loader2, PlusCircle, UserRound, Users, Clock, CheckCircle2, XCircle, CalendarDays,
+  CalendarClock, Loader2, PlusCircle, UserRound, Users, Clock, CheckCircle2, XCircle, CalendarDays, Heart, MapPin,
 } from "lucide-react";
 import { usePatients, useDoctors, useAppointments } from "@/hooks/useSupabaseData";
 import { Appointment } from "@/types/appointment";
@@ -133,7 +133,25 @@ const Dashboard = () => {
                 <CardTitle className="text-base">Upcoming Appointments</CardTitle>
                 <CardDescription>Next scheduled visits</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                {/* Blood Camp Advertisement */}
+                <div className="rounded-lg border-2 border-destructive/30 bg-destructive/5 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Heart className="h-5 w-5 text-destructive" />
+                    <h4 className="font-semibold text-destructive">🩸 Blood Donation Camp</h4>
+                  </div>
+                  <p className="text-sm font-medium">Saturday, April 12, 2026</p>
+                  <p className="text-xs text-muted-foreground mt-1">9:00 AM – 4:00 PM</p>
+                  <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3" />
+                    <span>Hospital Main Hall, Ground Floor</span>
+                  </div>
+                  <p className="text-xs mt-2 text-muted-foreground">
+                    All blood groups needed. Walk-ins welcome. Free health checkup for all donors!
+                  </p>
+                  <Badge variant="destructive" className="mt-2 text-xs">Register Now</Badge>
+                </div>
+
                 {upcoming.length === 0 ? (
                   <p className="py-6 text-center text-sm text-muted-foreground">No upcoming appointments</p>
                 ) : (
