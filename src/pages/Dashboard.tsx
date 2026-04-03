@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CalendarClock, Loader2, PlusCircle, UserRound, Users, Clock, CheckCircle2, XCircle, CalendarDays,
+  CalendarClock, Loader2, PlusCircle, UserRound, Users, Clock, CheckCircle2, XCircle, CalendarDays, Heart, MapPin,
 } from "lucide-react";
 import { usePatients, useDoctors, useAppointments } from "@/hooks/useSupabaseData";
 import { Appointment } from "@/types/appointment";
