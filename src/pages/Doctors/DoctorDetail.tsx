@@ -1,18 +1,26 @@
-
 import { useParams, useNavigate } from "react-router-dom";
-import { mockDoctors } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
+import { useDoctors } from "@/hooks/useSupabaseData";
 
 const DoctorDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { data: dbDoctors, isLoading } = useDoctors();
 
-  const doctor = mockDoctors.find((doc) => doc.id === id);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
-  if (!doctor) {
+  const raw = (dbDoctors ?? []).find((d: any) => d.id === id);
+
+  if (!raw) {
     return (
       <div className="flex flex-col items-center justify-center h-[400px]">
         <h2 className="text-xl font-semibold mb-2">Doctor not found</h2>
@@ -20,6 +28,19 @@ const DoctorDetail = () => {
       </div>
     );
   }
+
+  const doctor = {
+    ...raw,
+    department: raw.department ?? "",
+    specialization: raw.specialization ?? "",
+    qualification: raw.qualification ?? "",
+    experience: raw.experience ?? 0,
+    phone: raw.phone ?? "",
+    email: raw.email ?? "",
+    address: raw.address ?? "",
+    availability: (raw.availability as any) ?? { days: [], startTime: "09:00", endTime: "17:00" },
+    joiningDate: raw.joining_date ?? "",
+  };
 
   return (
     <div className="max-w-2xl mx-auto my-8">
@@ -34,10 +55,6 @@ const DoctorDetail = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-            <div>
-              <div className="text-sm text-muted-foreground">ID</div>
-              <div className="font-medium">{doctor.id}</div>
-            </div>
             <div>
               <div className="text-sm text-muted-foreground">Status</div>
               <Badge variant="outline" className="capitalize">
@@ -75,7 +92,7 @@ const DoctorDetail = () => {
             <div className="col-span-2">
               <div className="text-sm text-muted-foreground">Availability</div>
               <div className="font-medium">
-                {doctor.availability.days.join(", ")} (
+                {doctor.availability.days?.join(", ") || "Not set"} (
                 {doctor.availability.startTime} - {doctor.availability.endTime})
               </div>
             </div>
@@ -90,5 +107,4 @@ const DoctorDetail = () => {
     </div>
   );
 };
-
 export default DoctorDetail;
