@@ -230,6 +230,7 @@ const Dashboard = () => {
           </div>
         </>
       )}
+      <BloodCampRegistrationDialog open={bloodCampOpen} onOpenChange={setBloodCampOpen} />
     </div>
   );
 };
