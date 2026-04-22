@@ -1,6 +1,8 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatsCard from "@/components/dashboard/StatsCard";
+import BloodCampRegistrationDialog from "@/components/dashboard/BloodCampRegistrationDialog";
 import AppointmentList from "@/components/appointments/AppointmentList";
 import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
@@ -15,6 +17,7 @@ import { Appointment } from "@/types/appointment";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [bloodCampOpen, setBloodCampOpen] = useState(false);
 
   const { data: patients, isLoading: pLoading } = usePatients();
   const { data: doctors, isLoading: dLoading } = useDoctors();
