@@ -140,8 +140,8 @@ const Dashboard = () => {
                     <Heart className="h-5 w-5 text-destructive" />
                     <h4 className="font-semibold text-destructive">🩸 Blood Donation Camp</h4>
                   </div>
-                  <p className="text-sm font-medium">Saturday, April 12, 2026</p>
-                  <p className="text-xs text-muted-foreground mt-1">9:00 AM – 4:00 PM</p>
+                  <p className="text-sm font-medium">April 12 – May 5, 2026</p>
+                  <p className="text-xs text-muted-foreground mt-1">Daily, 9:00 AM – 4:00 PM</p>
                   <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                     <MapPin className="h-3 w-3" />
                     <span>Hospital Main Hall, Ground Floor</span>
