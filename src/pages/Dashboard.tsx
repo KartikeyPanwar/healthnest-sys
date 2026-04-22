@@ -152,7 +152,14 @@ const Dashboard = () => {
                   <p className="text-xs mt-2 text-muted-foreground">
                     All blood groups needed. Walk-ins welcome. Free health checkup for all donors!
                   </p>
-                  <Badge variant="destructive" className="mt-2 text-xs">Register Now</Badge>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="mt-3 h-7 text-xs"
+                    onClick={() => setBloodCampOpen(true)}
+                  >
+                    Register Now
+                  </Button>
                 </div>
 
                 {upcoming.length === 0 ? (
