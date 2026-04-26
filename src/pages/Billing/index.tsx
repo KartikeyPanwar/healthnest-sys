@@ -28,6 +28,7 @@ import { mockBills } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Bill } from "@/types/bill";
+import { downloadBillPdf } from "@/lib/billingPdf";
 
 const BillingPage = () => {
   const navigate = useNavigate();
@@ -53,7 +54,8 @@ const BillingPage = () => {
   };
 
   const handleDownloadPDF = (bill: Bill) => {
-    toast.success(`Downloading PDF for Bill #${bill.id}`, {
+    downloadBillPdf(bill);
+    toast.success(`Downloaded PDF for Bill #${bill.id}`, {
       description: `Invoice for ${bill.patientName} — ₹${bill.total.toFixed(2)}`,
     });
   };
