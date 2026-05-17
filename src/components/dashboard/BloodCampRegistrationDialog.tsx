@@ -67,7 +67,7 @@ const BloodCampRegistrationDialog = ({ open, onOpenChange }: Props) => {
             Blood Donation Camp Registration
           </DialogTitle>
           <DialogDescription>
-            April 12 – May 5, 2026 · Hospital Main Hall
+            April 12 – May 25, 2026 · Hospital Main Hall
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
